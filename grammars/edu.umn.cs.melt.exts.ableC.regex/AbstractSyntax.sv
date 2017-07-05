@@ -46,13 +46,13 @@ top::abs:Expr ::= l1::String
         abs:declStmt(
           abs:variableDecls(
             [abs:staticStorageClass()],
-            [],
-            abs:typedefTypeExpr([], abs:name("regex_t", location=top.location)),
+            abs:nilAttribute(),
+            abs:typedefTypeExpr(abs:nilQualifier(), abs:name("regex_t", location=top.location)),
             abs:foldDeclarator([
               abs:declarator(
                 abs:name("thisRegex", location=top.location),
                 abs:baseTypeExpr(),
-                [],
+                abs:nilAttribute(),
                 abs:nothingInitializer()
               )
             ])
@@ -62,13 +62,13 @@ top::abs:Expr ::= l1::String
         abs:declStmt(
           abs:variableDecls(
             [abs:staticStorageClass()],
-            [],
-            abs:directTypeExpr(abs:builtinType([], abs:boolType())),
+            abs:nilAttribute(),
+            abs:directTypeExpr(abs:builtinType(abs:nilQualifier(), abs:boolType())),
             abs:foldDeclarator([
               abs:declarator(
                 abs:name("uninited", location=top.location),
                 abs:baseTypeExpr(),
-                [],
+                abs:nilAttribute(),
                 abs:justInitializer(
                   abs:exprInitializer(
                     abs:realConstant(
@@ -137,9 +137,9 @@ top::abs:Expr ::= text::abs:Expr  re::abs:Expr
   local localErrs :: [Message] =
     (if !null(regext) then [] else
       [err(top.location, "Regex match operators require <regex.h> to be included.")]) ++
-    (if abs:compatibleTypes(text.abs:typerep, abs:pointerType([], abs:builtinType([], abs:signedType(abs:charType()))), true) then [] else
+    (if abs:compatibleTypes(text.abs:typerep, abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:nilQualifier(), abs:signedType(abs:charType()))), true, true) then [] else
       [err(top.location, "First operand to =~ must be char * (got " ++ abs:showType(text.abs:typerep) ++ ")")]) ++
-    (if abs:compatibleTypes(re.abs:typerep, abs:pointerType([], head(regext).abs:typerep), true) then [] else
+    (if abs:compatibleTypes(re.abs:typerep, abs:pointerType(abs:nilQualifier(), head(regext).abs:typerep), true, true) then [] else
       [err(top.location, "Second operand to =~ must be regex_t * (got " ++ abs:showType(re.abs:typerep) ++ ")")]);
 
   forwards to
