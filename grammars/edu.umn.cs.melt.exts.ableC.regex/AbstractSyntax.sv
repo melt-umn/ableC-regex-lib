@@ -137,8 +137,11 @@ top::abs:Expr ::= text::abs:Expr  re::abs:Expr
   local localErrs :: [Message] =
     (if !null(regext) then [] else
       [err(top.location, "Regex match operators require <regex.h> to be included.")]) ++
-    (if abs:compatibleTypes(text.abs:typerep, abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:nilQualifier(), abs:signedType(abs:charType()))), true, true) then [] else
-      [err(top.location, "First operand to =~ must be char * (got " ++ abs:showType(text.abs:typerep) ++ ")")]) ++
+    (if abs:compatibleTypes(
+           text.abs:typerep,
+	   abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:consQualifier(abs:constQualifier() ,abs:nilQualifier()), abs:signedType(abs:charType()))),
+	   true, true) then [] else
+      [err(top.location, "First operand to =~ must be const char * (got " ++ abs:showType(text.abs:typerep) ++ ")")]) ++
     (if abs:compatibleTypes(re.abs:typerep, abs:pointerType(abs:nilQualifier(), head(regext).abs:typerep), true, true) then [] else
       [err(top.location, "Second operand to =~ must be regex_t * (got " ++ abs:showType(re.abs:typerep) ++ ")")]);
 
