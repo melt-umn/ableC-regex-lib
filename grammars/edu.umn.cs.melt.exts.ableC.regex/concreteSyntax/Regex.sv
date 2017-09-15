@@ -1,9 +1,10 @@
-grammar edu:umn:cs:melt:exts:ableC:regex:regexLiterals;
+grammar edu:umn:cs:melt:exts:ableC:regex:concreteSyntax;
 
 imports edu:umn:cs:melt:ableC:concretesyntax as cnc;
+imports edu:umn:cs:melt:ableC:abstractsyntax as abs;
 imports silver:langutil only ast;
 
-import edu:umn:cs:melt:exts:ableC:regex;
+imports edu:umn:cs:melt:exts:ableC:regex;
 
 -- Spurious import, to trigger the tests on build.
 import edu:umn:cs:melt:exts:ableC:regex:mda_test;

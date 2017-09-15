@@ -1,4 +1,4 @@
-grammar edu:umn:cs:melt:exts:ableC:regex:regexLiterals;
+grammar edu:umn:cs:melt:exts:ableC:regex:concreteSyntax;
 --from grammar silver:definition:regex;
 
 synthesized attribute regString :: String;
