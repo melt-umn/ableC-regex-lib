@@ -3,7 +3,7 @@
 
 int main (int argc, char **argv) {
 
-  char *text = "Some text to match.";
+  const char *text = "Some text to match.";
 
   // Literal syntax
   regex_t *identifier = /[A-Za-z_][A-Za-z0-9_]*$/;

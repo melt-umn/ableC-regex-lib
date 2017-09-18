@@ -1,4 +1,4 @@
-grammar edu:umn:cs:melt:exts:ableC:regex;
+grammar edu:umn:cs:melt:exts:ableC:regex:abstractsyntax;
 
 imports edu:umn:cs:melt:ableC:abstractsyntax as abs;
 imports edu:umn:cs:melt:ableC:abstractsyntax:construction as abs;
