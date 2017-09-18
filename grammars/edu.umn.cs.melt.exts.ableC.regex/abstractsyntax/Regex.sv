@@ -13,6 +13,8 @@ top::abs:Expr ::= l1::String
   -- We check to make sure regcomp is in the environment. We could further check
   -- that it has the right type, but that can come later.
 
+  top.pp = text(l1);
+
   local localErrs :: [Message] =
     (if !null(abs:lookupValue("regcomp", top.abs:env)) then [] else
       [err(top.location, "Regex literals require <regex.h> to be included.")]);
@@ -131,6 +133,8 @@ top::abs:Expr ::= l1::String
 abstract production regexMatch
 top::abs:Expr ::= text::abs:Expr  re::abs:Expr
 {
+
+  top.pp = ppConcat([text.pp, pp"=~", re.pp]);
   -- Yep, a *value* item. C. lol.
   local regext :: [abs:ValueItem] = abs:lookupValue("regex_t", top.abs:env);
 
