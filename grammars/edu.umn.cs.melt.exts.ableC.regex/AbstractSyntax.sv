@@ -1,6 +1,6 @@
 grammar edu:umn:cs:melt:exts:ableC:regex;
 
-imports edu:umn:cs:melt:ableC:abstractsyntax as abs;
+imports edu:umn:cs:melt:ableC:abstractsyntax:host as abs;
 imports edu:umn:cs:melt:ableC:abstractsyntax:construction as abs;
 imports edu:umn:cs:melt:ableC:abstractsyntax:env as abs;
 
@@ -93,9 +93,8 @@ top::abs:Expr ::= l1::String
                   ),
                   -- Escape backslashes, as they're now in a string literal
                   abs:stringLiteral(substitute("\\", "\\\\", l1), location=top.location),
-                  abs:binaryOpExpr(
+                  abs:orBitExpr(
                     regExtended,
-                    abs:bitOp(abs:orBitOp(location=top.location), location=top.location),
                     regNosub,
                     location=top.location
                   )
@@ -104,9 +103,8 @@ top::abs:Expr ::= l1::String
               )
             ),
             abs:exprStmt(
-              abs:binaryOpExpr(
+              abs:eqExpr(
                 abs:declRefExpr(abs:name("uninited", location=top.location), location=top.location),
-                abs:assignOp(abs:eqOp(location=top.location), location=top.location),
                 abs:realConstant(
                   abs:integerConstant("0", false, abs:noIntSuffix(), location=top.location),
                   location=top.location
@@ -139,7 +137,7 @@ top::abs:Expr ::= text::abs:Expr  re::abs:Expr
       [err(top.location, "Regex match operators require <regex.h> to be included.")]) ++
     (if abs:compatibleTypes(
            text.abs:typerep,
-	   abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:consQualifier(abs:constQualifier() ,abs:nilQualifier()), abs:signedType(abs:charType()))),
+	   abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:consQualifier(abs:constQualifier(location=top.location) ,abs:nilQualifier()), abs:signedType(abs:charType()))),
 	   true, true) then [] else
       [err(top.location, "First operand to =~ must be const char * (got " ++ abs:showType(text.abs:typerep) ++ ")")]) ++
     (if abs:compatibleTypes(re.abs:typerep, abs:pointerType(abs:nilQualifier(), head(regext).abs:typerep), true, true) then [] else
@@ -160,9 +158,8 @@ top::abs:Expr ::= text::abs:Expr  re::abs:Expr
   
   local matchingExpr :: abs:Expr =
     -- REG_NOMATCH != regexec(re, text, 0, 0, 0)
-    abs:binaryOpExpr(
+    abs:notEqualsExpr(
       abs:declRefExpr(abs:name("REG_NOMATCH", location=top.location), location=top.location),
-      abs:compareOp(abs:notEqualsOp(location=top.location), location=top.location),
       abs:directCallExpr(
         abs:name("regexec", location=top.location),
         abs:foldExpr([
