@@ -86,8 +86,7 @@ top::abs:Expr ::= l1::String
               abs:directCallExpr(
                 abs:name("regcomp", location=top.location),
                 abs:foldExpr([
-                  abs:unaryOpExpr(
-                    abs:addressOfOp(location=top.location),
+                  abs:addressOfExpr(
                     abs:declRefExpr(abs:name("thisRegex", location=top.location), location=top.location),
                     location=top.location
                   ),
@@ -117,8 +116,7 @@ top::abs:Expr ::= l1::String
         )
       ]),
       -- &thisRegex
-      abs:unaryOpExpr(
-        abs:addressOfOp(location=top.location),
+      abs:addressOfExpr(
         abs:declRefExpr(abs:name("thisRegex", location=top.location), location=top.location),
         location=top.location
       ),
