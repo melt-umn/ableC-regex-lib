@@ -2,5 +2,5 @@
 
 # Quick hack fix, since all of these compositions are named artifact.
 touch artifact/Main.sv
-silver -I . -I grammars -I ../../ableC -o ableC.jar $@ artifact
+silver -I . -I grammars -I ../../ableC/grammars -o ableC.jar $@ artifact
 
