@@ -45,7 +45,7 @@ top::abs:Expr ::= l1::String
         -- static regex_t thisRegex;
         abs:declStmt(
           abs:variableDecls(
-            [abs:staticStorageClass()],
+            abs:foldStorageClass([abs:staticStorageClass()]),
             abs:nilAttribute(),
             abs:typedefTypeExpr(abs:nilQualifier(), abs:name("regex_t", location=top.location)),
             abs:foldDeclarator([
@@ -61,7 +61,7 @@ top::abs:Expr ::= l1::String
         -- static bool uninited = 0;
         abs:declStmt(
           abs:variableDecls(
-            [abs:staticStorageClass()],
+            abs:foldStorageClass([abs:staticStorageClass()]),
             abs:nilAttribute(),
             abs:directTypeExpr(abs:builtinType(abs:nilQualifier(), abs:boolType())),
             abs:foldDeclarator([
