@@ -1,0 +1,33 @@
+ide_specification for edu:umn:cs:melt:exts:ableC:regex:regexLiterals {
+  terminal RegexBegin_t {
+    atomMarkupName = string.regexp;
+  };
+  
+  terminal RegexEnd_t {
+    atomMarkupName = string.regexp;
+  };
+
+  lexer class REGEX_OPER {
+    atomMarkupName = string.regexp;
+  };
+
+  lexer class REGEX_ESC {
+    atomMarkupName = constant.character.escape;
+  };
+}
+
+ide_specification for edu:umn:cs:melt:exts:ableC:regex:regexMatching {
+  terminal RegexMatch_t {
+    atomMarkupName = keyword.operator;
+  };
+}
+
+ide_specification for edu:umn:cs:melt:exts:ableC:regex:regexMatchingVerbose {
+  terminal RegexMatch_t {
+    atomMarkupName = keyword.operator;
+  };
+
+  terminal Against_t {
+    atomMarkupName = keyword.control;
+  };
+}
