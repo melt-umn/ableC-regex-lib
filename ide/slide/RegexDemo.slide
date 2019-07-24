@@ -1,3 +1,4 @@
+specification RealisticDemo;
 ide_specification for edu:umn:cs:melt:exts:ableC:regex:regexLiterals {
   terminal RegexBegin_t {
     atomMarkupName = string.regexp;
