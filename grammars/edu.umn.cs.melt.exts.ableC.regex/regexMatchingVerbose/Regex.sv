@@ -9,8 +9,8 @@ import edu:umn:cs:melt:exts:ableC:regex;
 -- Spurious import, to trigger the tests on build.
 import edu:umn:cs:melt:exts:ableC:regex:mda_test;
 
-marking terminal RegexMatch_t 'match' lexer classes {Keyword, Global};
-terminal Against_t 'against' lexer classes {Keyword};
+marking terminal RegexMatch_t 'match' lexer classes {cnc:Keyword, cnc:Global};
+terminal Against_t 'against' lexer classes {cnc:Keyword};
 
 concrete productions top::cnc:PrimaryExpr_c
 | 'match' e::cnc:Expr_c 'against' r::RX_c

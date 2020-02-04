@@ -8,7 +8,7 @@ import edu:umn:cs:melt:exts:ableC:regex;
 -- Spurious import, to trigger the tests on build.
 import edu:umn:cs:melt:exts:ableC:regex:mda_test;
 
-marking terminal RegexMatch_t '=~';
+marking terminal RegexMatch_t '=~' lexer classes {cnc:Operator};
 
 concrete productions top::cnc:AddMulNoneOp_c
 | '=~'
