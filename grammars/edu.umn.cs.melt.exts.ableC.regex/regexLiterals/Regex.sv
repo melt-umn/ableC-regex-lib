@@ -8,8 +8,9 @@ import edu:umn:cs:melt:exts:ableC:regex;
 -- Spurious import, to trigger the tests on build.
 import edu:umn:cs:melt:exts:ableC:regex:mda_test;
 
-marking terminal RegexBegin_t '/';
-terminal RegexEnd_t '/';
+-- 'Operator' is maybe the closest designation for these? IDK.
+marking terminal RegexBegin_t '/' lexer classes Operator;
+terminal RegexEnd_t '/' lexer classes Operator;
 
 concrete production regex_c
 e::cnc:PrimaryExpr_c ::= d1::RegexBegin_t  r::Regex_R  d2::RegexEnd_t
