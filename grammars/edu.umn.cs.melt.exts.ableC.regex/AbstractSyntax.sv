@@ -73,7 +73,8 @@ top::abs:Expr ::= l1::String
                   abs:exprInitializer(
                     abs:realConstant(
                       abs:integerConstant("1", false, abs:noIntSuffix(), location=top.location),
-                      location=top.location)))
+                      location=top.location),
+                    location=top.location))
               )
             ])
           )
