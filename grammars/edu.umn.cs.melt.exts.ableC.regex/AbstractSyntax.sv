@@ -10,6 +10,9 @@ imports silver:langutil:pp;
 abstract production regexLiteralExpr
 top::abs:Expr ::= l1::String
 {
+  top.pp = pp"/${text(substring(1, length(l1) - 1, l1))}/";
+  propagate abs:env, abs:controlStmtContext;
+
   -- We check to make sure regcomp is in the environment. We could further check
   -- that it has the right type, but that can come later.
 
@@ -128,6 +131,9 @@ top::abs:Expr ::= l1::String
 abstract production regexMatch
 top::abs:Expr ::= text::abs:Expr  re::abs:Expr
 {
+  top.pp = pp"(${text}) ~= (${re})";
+  propagate abs:env, abs:controlStmtContext;
+
   -- Yep, a *value* item. C. lol.
   local regext :: [abs:ValueItem] = abs:lookupValue("regex_t", top.abs:env);
 
