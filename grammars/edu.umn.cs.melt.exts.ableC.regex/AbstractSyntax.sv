@@ -66,7 +66,7 @@ top::abs:Expr ::= l1::String
           abs:variableDecls(
             abs:foldStorageClass([abs:staticStorageClass()]),
             abs:nilAttribute(),
-            abs:directTypeExpr(builtinType(abs:nilQualifier(), abs:boolType())),
+            abs:directTypeExpr(abs:builtinType(abs:nilQualifier(), abs:boolType())),
             abs:foldDeclarator([
               abs:declarator(
                 abs:name("uninited", location=top.location),
@@ -142,7 +142,7 @@ top::abs:Expr ::= text::abs:Expr  re::abs:Expr
       [err(top.location, "Regex match operators require <regex.h> to be included.")]) ++
     (if abs:compatibleTypes(
            text.abs:typerep,
-	   abs:pointerType(abs:nilQualifier(), builtinType(abs:consQualifier(abs:constQualifier(location=top.location) ,abs:nilQualifier()), abs:signedType(abs:charType()))),
+	   abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:consQualifier(abs:constQualifier(location=top.location) ,abs:nilQualifier()), abs:signedType(abs:charType()))),
 	   true, true) then [] else
       [err(top.location, "First operand to =~ must be const char * (got " ++ abs:showType(text.abs:typerep) ++ ")")]) ++
     (if abs:compatibleTypes(re.abs:typerep, abs:pointerType(abs:nilQualifier(), head(regext).abs:typerep), true, true) then [] else
