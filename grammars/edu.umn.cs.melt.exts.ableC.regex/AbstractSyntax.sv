@@ -18,29 +18,27 @@ top::abs:Expr ::= l1::String
 
   local localErrs :: [Message] =
     (if !null(abs:lookupValue("regcomp", top.abs:env)) then [] else
-      [err(top.location, "Regex literals require <regex.h> to be included.")]);
+      [errFromOrigin(top, "Regex literals require <regex.h> to be included.")]);
 
   
   forwards to
     if null(localErrs) then
       regexLiteral
     else
-      abs:errorExpr(localErrs, location=top.location);
+      abs:errorExpr(localErrs);
 
   
   local regExtended :: abs:Expr =
-    --abs:declRefExpr(abs:name("REG_EXTENDED", location=top.location), location=top.location);
+    --abs:declRefExpr(abs:name("REG_EXTENDED"));
     -- TODO: problem, these are #defines in the header file.
     abs:realConstant(
-      abs:integerConstant("1", false, abs:noIntSuffix(), location=top.location),
-      location=top.location);
+      abs:integerConstant("1", false, abs:noIntSuffix()));
   
   local regNosub :: abs:Expr =
-    --abs:declRefExpr(abs:name("REG_NOSUB", location=top.location), location=top.location)
+    --abs:declRefExpr(abs:name("REG_NOSUB"))
     -- TODO: ditto problem
     abs:realConstant(
-      abs:integerConstant("8", false, abs:noIntSuffix(), location=top.location),
-      location=top.location);
+      abs:integerConstant("8", false, abs:noIntSuffix()));
   
   local regexLiteral :: abs:Expr =
     abs:stmtExpr(
@@ -50,10 +48,10 @@ top::abs:Expr ::= l1::String
           abs:variableDecls(
             abs:foldStorageClass([abs:staticStorageClass()]),
             abs:nilAttribute(),
-            abs:typedefTypeExpr(abs:nilQualifier(), abs:name("regex_t", location=top.location)),
+            abs:typedefTypeExpr(abs:nilQualifier(), abs:name("regex_t")),
             abs:foldDeclarator([
               abs:declarator(
-                abs:name("thisRegex", location=top.location),
+                abs:name("thisRegex"),
                 abs:baseTypeExpr(),
                 abs:nilAttribute(),
                 abs:nothingInitializer()
@@ -69,50 +67,43 @@ top::abs:Expr ::= l1::String
             abs:directTypeExpr(abs:builtinType(abs:nilQualifier(), abs:boolType())),
             abs:foldDeclarator([
               abs:declarator(
-                abs:name("uninited", location=top.location),
+                abs:name("uninited"),
                 abs:baseTypeExpr(),
                 abs:nilAttribute(),
                 abs:justInitializer(
                   abs:exprInitializer(
                     abs:realConstant(
-                      abs:integerConstant("1", false, abs:noIntSuffix(), location=top.location),
-                      location=top.location),
-                    location=top.location))
+                      abs:integerConstant("1", false, abs:noIntSuffix()))))
               )
             ])
           )
         ),
         -- if(uninited) { regcomp(&thisRegex, "regstr", REG_EXTENDED | REG_NOSUB); uninited = 0; }
         abs:ifStmt(
-          abs:declRefExpr(abs:name("uninited", location=top.location), location=top.location),
+          abs:declRefExpr(abs:name("uninited")),
           abs:seqStmt(
             abs:exprStmt(
               abs:directCallExpr(
-                abs:name("regcomp", location=top.location),
+                abs:name("regcomp"),
                 abs:foldExpr([
                   abs:addressOfExpr(
-                    abs:declRefExpr(abs:name("thisRegex", location=top.location), location=top.location),
-                    location=top.location
+                    abs:declRefExpr(abs:name("thisRegex"))
                   ),
                   -- Escape backslashes, as they're now in a string literal
-                  abs:stringLiteral(substitute("\\", "\\\\", l1), location=top.location),
+                  abs:stringLiteral(substitute("\\", "\\\\", l1)),
                   abs:orBitExpr(
                     regExtended,
-                    regNosub,
-                    location=top.location
+                    regNosub
                   )
-                ]),
-                location=top.location
+                ])
               )
             ),
             abs:exprStmt(
               abs:eqExpr(
-                abs:declRefExpr(abs:name("uninited", location=top.location), location=top.location),
+                abs:declRefExpr(abs:name("uninited")),
                 abs:realConstant(
-                  abs:integerConstant("0", false, abs:noIntSuffix(), location=top.location),
-                  location=top.location
-                ),
-                location=top.location
+                  abs:integerConstant("0", false, abs:noIntSuffix())
+                )
               )
             )
           ),
@@ -121,10 +112,8 @@ top::abs:Expr ::= l1::String
       ]),
       -- &thisRegex
       abs:addressOfExpr(
-        abs:declRefExpr(abs:name("thisRegex", location=top.location), location=top.location),
-        location=top.location
-      ),
-      location=top.location
+        abs:declRefExpr(abs:name("thisRegex"))
+      )
     );
 }
 
@@ -139,51 +128,47 @@ top::abs:Expr ::= text::abs:Expr  re::abs:Expr
 
   local localErrs :: [Message] =
     (if !null(regext) then [] else
-      [err(top.location, "Regex match operators require <regex.h> to be included.")]) ++
+      [errFromOrigin(top, "Regex match operators require <regex.h> to be included.")]) ++
     (if abs:compatibleTypes(
            text.abs:typerep,
-	   abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:consQualifier(abs:constQualifier(location=top.location) ,abs:nilQualifier()), abs:signedType(abs:charType()))),
+	   abs:pointerType(abs:nilQualifier(), abs:builtinType(abs:consQualifier(abs:constQualifier() ,abs:nilQualifier()), abs:signedType(abs:charType()))),
 	   true, true) then [] else
-      [err(top.location, "First operand to =~ must be const char * (got " ++ abs:showType(text.abs:typerep) ++ ")")]) ++
+      [errFromOrigin(top, "First operand to =~ must be const char * (got " ++ abs:showType(text.abs:typerep) ++ ")")]) ++
     (if abs:compatibleTypes(re.abs:typerep, abs:pointerType(abs:nilQualifier(), head(regext).abs:typerep), true, true) then [] else
-      [err(top.location, "Second operand to =~ must be regex_t * (got " ++ abs:showType(re.abs:typerep) ++ ")")]);
+      [errFromOrigin(top, "Second operand to =~ must be regex_t * (got " ++ abs:showType(re.abs:typerep) ++ ")")]);
 
   forwards to
     if null(localErrs) then
       matchingExpr
     else
       -- Remember not to supress subexpressions' errors.
-      abs:errorExpr(localErrs ++ text.errors ++ re.errors, location=top.location);
+      abs:errorExpr(localErrs ++ text.errors ++ re.errors);
 
   
   local zero :: abs:Expr =
     abs:realConstant(
-      abs:integerConstant("0", false, abs:noIntSuffix(), location=top.location),
-      location=top.location);
+      abs:integerConstant("0", false, abs:noIntSuffix()));
   
   local matchingExpr :: abs:Expr =
     -- REG_NOMATCH != regexec(re, text, 0, 0, 0)
     abs:notEqualsExpr(
-      abs:declRefExpr(abs:name("REG_NOMATCH", location=top.location), location=top.location),
+      abs:declRefExpr(abs:name("REG_NOMATCH")),
       abs:directCallExpr(
-        abs:name("regexec", location=top.location),
+        abs:name("regexec"),
         abs:foldExpr([
           re,
           text,
           zero, zero, zero
-        ]),
-        location=top.location
-      ),
-      location=top.location
+        ])
+      )
     );
 {-  
     -- matchRegex (r, t)
     abs:directCallExpr(
-      abs:name("matchRegex", location=top.location),
+      abs:name("matchRegex"),
       abs:foldExpr([
         r,
-        text]),
-      location=top.location
+        text])
     );-}
 }
 

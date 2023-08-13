@@ -12,6 +12,5 @@ marking terminal RegexMatch_t '=~' lexer classes {cnc:Operator};
 
 concrete productions top::cnc:AddMulNoneOp_c
 | '=~'
-    { top.ast = regexMatch(top.cnc:leftExpr, top.cnc:rightExpr,
-        location=top.cnc:exprLocation); }
+    { top.ast = regexMatch(top.cnc:leftExpr, top.cnc:rightExpr); }
 
