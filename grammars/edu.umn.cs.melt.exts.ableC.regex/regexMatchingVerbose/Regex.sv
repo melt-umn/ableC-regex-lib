@@ -2,7 +2,8 @@ grammar edu:umn:cs:melt:exts:ableC:regex:regexMatchingVerbose;
 
 imports edu:umn:cs:melt:ableC:concretesyntax as cnc;
 imports edu:umn:cs:melt:ableC:abstractsyntax:host as abs;
-imports silver:langutil only ast;
+imports silver:regex:concrete_syntax;
+imports silver:langutil;
 
 import edu:umn:cs:melt:exts:ableC:regex;
 
@@ -14,12 +15,12 @@ terminal Against_t 'against' lexer classes {cnc:Keyword};
 
 concrete productions top::cnc:PrimaryExpr_c
 | 'match' e::cnc:Expr_c 'against' r::RX_c
-  { top.ast = regexMatch(e.ast, r.ast, location=top.location); }
+  { top.ast = regexMatch(e.ast, r.ast); }
 
-nonterminal RX_c with ast<abs:Expr>, location;
+tracked nonterminal RX_c with ast<abs:Expr>;
 
 concrete production rx_c
-rx::RX_c ::= d1::RegexBegin_t  r::Regex_R  d2::RegexEnd_t
+rx::RX_c ::= d1::RegexBegin_t  r::Regex  d2::RegexEnd_t
 layout {}
-{ rx.ast = regexLiteralExpr("\"" ++ r.regString ++ "\"", location=d1.location);
+{ rx.ast = regexLiteralExpr("\"" ++ r.unparse ++ "\"");
 }

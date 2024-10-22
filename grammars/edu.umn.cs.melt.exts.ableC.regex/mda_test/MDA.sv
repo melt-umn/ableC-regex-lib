@@ -12,5 +12,6 @@ copper_mda testMatching(ablecParser) {
 
 copper_mda testLiterals(ablecParser) {
   edu:umn:cs:melt:exts:ableC:regex:regexLiterals;
+  silver:regex:concrete_syntax;
 }
 
